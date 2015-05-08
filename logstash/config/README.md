@@ -1,0 +1,1 @@
+These are meant to be used for backfilling old data - not to be used when running logstash as a continuous service, nor should it be run repeatedly without deleting old indices (unless you want duplicate entries in elasticsearch).

@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+/var/log/elasticsearch/*.log {
+        daily
+        rotate 7
+        copytruncate
+        compress
+        missingok
+        notifempty
+        size 50M
+}

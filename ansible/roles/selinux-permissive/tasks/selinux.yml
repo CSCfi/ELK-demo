@@ -1,0 +1,23 @@
+#### Selinux
+
+  - name: disable selinux
+    selinux:  state=permissive policy=targeted
+    register: selinuxchange
+
+  - name: restart machine if selinux was changed
+    command: shutdown -r now "Ansible updates triggered"
+    async: 0
+    poll: 0
+    ignore_errors: true
+    when: selinuxchange.changed
+    register: restartselinux
+
+  - name: if restart, wait min 5s(+300s) for server to come back after reboot
+    local_action: wait_for host={{ inventory_hostname }}
+                  port=22
+                  state=started
+                  delay=5
+                  timeout=300
+    sudo: false
+    when: restartselinux.changed
+

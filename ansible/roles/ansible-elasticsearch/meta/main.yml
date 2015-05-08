@@ -1,0 +1,12 @@
+---
+# Elasticsearch Ansible Meta
+galaxy_info:
+  author: "Johan Guldmyr"
+  company: CSC
+  license: MIT
+  min_ansible_version: 1.3
+  platforms:
+   - os_family: RedHat
+     distribution:
+      - CentOS
+dependencies: []

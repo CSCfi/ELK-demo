@@ -1,0 +1,99 @@
+---
+# This playbook is for ELK on RHEL6(and maybe RHEL7 too) based systems. 
+# Used by CSC.fi during 2015. 
+# Sources: https://github.com/Traackr/ansible-elasticsearch
+# All roles in here are meant to be re-playable and should be considered "safe".
+# Many host specific things inside configs etc..
+# Written by Johan Guldmyr
+#
+# export ANSIBLE_HOSTS=$HOME/ansible-hosts
+# cat $ANSIBLE_HOSTS:
+#[ELK]
+#IP_ADDRESS_HERE ansible_ssh_user=cloud-user
+# ansible-playbook dcache.yml
+
+##########
+
+ - name: configuring all the common services
+   hosts: ELK
+   sudo: yes
+   vars:
+     programs_to_install:
+       - java-1.7.0-openjdk
+       - nc
+       - nfs-utils
+       - dstat
+       - python-httplib2
+       - git
+     programs_on_boot:
+       - sshd
+     bshell: "/bin/bash"
+     moregroups: esbackup
+     esuser:
+       - { name: elasticsearch, uid: 498, group: elasticsearch, groups: "{{moregroups}}", shell: "{{bshell}}" }
+     lsuser:
+       - { name: logstash, groups: "{{moregroups}}" }
+     cscgroups:
+       - { name: csc, gid: 101 }
+       - { name: elasticsearch, gid: 201 }
+       - { name: esbackup, gid: 54444 }
+     add_es_repofile: "yes"
+     add_es_repogpgkey: "yes"
+     install_es_plugins: "no"
+     add_logstash_user: "no"
+   vars_files:
+     - roles/ansible-elasticsearch/defaults/main.yml
+     - roles/ansible-elasticsearch/vars/my-vars.yml
+      
+   roles:
+     - {role: ELK, tags: [ 'elasticsearch' ] }
+     - {role: selinux-permissive, tags: [ 'selinux' ] }
+     - {role: ansible-elasticsearch, tags: [ 'elasticsearch' ] }
+
+##########
+
+ - name: httpd, kibana + logstash
+   hosts: ELK
+   sudo: yes
+   vars:
+     programs_to_install:
+       - logstash
+       - httpd
+       - mod_ssl
+       - mod_authz_ldap
+     programs_on_boot:
+       - logstash
+       - httpd
+     elasticsearch_index_base: "demo"
+     esb: "{{ elasticsearch_index_base }}"
+     add_logstash_repofile: "yes"
+     logstash_version: "1.4"
+     logstashuser: "LS_USER=logstash"
+     logstashgroup: "LS_GROUP=csc"
+     kibana_elasticsearch_port: "80"
+     kibana_config_js: "templates/kibana-demo-config.js.j2"
+     use_kibana3_httpd: true
+     kibana_version: "3.1.2"
+     kibana3_path: "/var/www/html/kibana-{{ kibana_version }}"
+     kibana3_symlink: "/var/www/html/demo-kibana"
+     kibana_interval: "day"
+     kibana_pattern: "[demo-]YYYY.MM.DD"
+     kibana_default: "[demo-]YYYY.MM.DD"
+     kibana_dashboards:
+      - "blank.json"
+      - "README_MANAGED_BY_ANSIBLE.txt"
+      - "guided.json"
+      - "noted.json"
+      - "logstash.json"
+     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
+     use_kibana4_httpd: true
+     kibana4_version: "4.0.1-linux-x64"
+     kibana4_path: "/opt/kibana-{{ kibana4_version }}"
+     kibana4_symlink: "/opt/kibana4"
+     kibana4_config_yml: "templates/kibana4-demo-config.yml.j2"
+     kibana4_init_script: "templates/kibana4-demo-logstash-web.init"
+   roles:
+     - {role: ansible-logstash }
+     - {role: ansible-kibana3 }
+     - {role: ansible-kibana4 }
+     - {role: ansible-elk-httpd }

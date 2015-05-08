@@ -1,0 +1,2 @@
+[ELK]
+vm0444.kaj.pouta.csc.fi ansible_ssh_user=cloud-user

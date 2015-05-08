@@ -1,0 +1,5 @@
+---
+
+### The roles
+#
+  - include: selinux.yml

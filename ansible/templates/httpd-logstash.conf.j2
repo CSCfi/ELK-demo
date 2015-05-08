@@ -1,0 +1,155 @@
+# {{ ansible_managed }}
+# Source: https://gist.github.com/jerrac/6382702
+# Intention: Have ElasticSearch not directly accessible but instead
+#  proxied. To filter and pass all http connections to https.
+
+## 80 > and 9292 - this is the kibana web interface
+## 80 > localhost:9199 for the allowed ES queries
+## 443 > localhost:9292 for all else (Kibana)
+## DNS:443 > localhost:5601 for all else (Kibana)
+## localhost:8444 > localhost:9199 for kibana4
+#
+
+NameVirtualHost 127.0.0.1:8444
+#NameVirtualHost {{ ansible_default_ipv4.address }}:80
+#NameVirtualHost {{ ansible_default_ipv4.address }}:443
+
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+
+<VirtualHost *:80>
+        ServerAdmin admin@{{ ansible_nodename }}
+        ServerName {{ ansible_nodename }}
+        ServerAlias {{ ansible_nodename }}
+	ErrorLog logs/error_log
+	TransferLog logs/access_log
+	LogLevel warn
+	# Here is where Kibana, kibana config and dashboards are installed
+        DocumentRoot /var/www/html/demo-kibana
+	<Directory "/">
+	    # Don't allow PUT or DELETE http commands
+            <Limit PUT DELETE POST>
+                    Require user 12Mg8kRpu2lOQS8RDjiOydHUApEh1RNV
+            </Limit>
+	</Directory>
+		
+  # 1.3.3 needs .*/_aliases, before that _aliases was enough.
+  <LocationMatch "^(/{{ esb }}.*/_aliases|/{{ esb }}.*/_search|/{{ esb }}.*/_mapping|/{{ esb }}.*/_nodes|/_nodes)$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # Proxy for demo-kibana-int/{dashboard,temp} stuff (if you don't want auth on /, then you will want these to be protected) - to only show DEMO dashboards
+  <LocationMatch "^(/{{ esb }}-kibana-int/dashboard/|/{{ esb }}-kibana-int/temp).*$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # To allow checking health remotely:
+  <LocationMatch "^(/_cluster/health.*)$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # To allow checking settings remotely:
+  <LocationMatch "^(/_cluster/settings.*)$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+ProxyRequests On
+ProxyVia On
+
+</VirtualHost>
+
+# 8444 
+
+Listen 8444
+
+<VirtualHost localhost:8444>
+        ServerAdmin admin@{{ ansible_nodename }}
+        ServerName localhost
+        ErrorLog logs/es_k4_error_log
+        TransferLog logs/es_k4_access_log
+        LogLevel warn
+
+        <Directory "/">
+            # Don't allow PUT or DELETE http commands
+            <Limit PUT DELETE>
+                    Require user 12Mg8kRpu2lOQS8RDjiOydHUApEh1RNV
+            </Limit>
+        </Directory>
+
+  # Allow access to all the demo indices, nothing else
+  <LocationMatch "^(/{{ esb }}.*/_aliases|/{{ esb }}.*/_search|/{{ esb }}.*/_mapping|/{{ esb }}.*/_nodes|/_nodes)$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # Proxy for demo-kibana-int/{dashboard,temp} stuff (if you don't want auth on /, then you will want these to be protected) - to only show DEMO dashboards
+  #<LocationMatch "^(/{{ esb }}-kibana4-int/dashboard/|/{{ esb }}-kibana4-int/temp).*$">
+  <LocationMatch "^(/{{ esb }}-kibana4-int|/{{ esb }}-kibana4-int/.*/).*$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # To allow checking health remotely:
+  <LocationMatch "^(/_cluster/health.*)$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # To allow checking settings remotely:
+  <LocationMatch "^(/_cluster/settings.*)$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # Kibana4 wants this..
+  <LocationMatch "^/$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # And this:  /_mget?timeout=0&ignore_unavailable=true&preference=1426159120767
+  <LocationMatch "^/_mget.*$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+  # And this:   /_msearch?timeout=0&ignore_unavailable=true&preference=1426159391959
+  <LocationMatch "^/_msearch.*$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+ 
+  # And this: /demo-*/_mapping/field/*?ignore_unavailable=false&allow_no_indices=false&include_defaults=true
+  <LocationMatch "^(/{{ esb }}.*/_mapping/.*)$">
+    ProxyPassMatch http://{{ ansible_nodename }}:9199
+    ProxyPassReverse http://{{ ansible_nodename }}:9199
+  </LocationMatch>
+
+</VirtualHost>
+
+Listen 443
+<VirtualHost *:443>
+        ServerAdmin admin@{{ kibana4_cname }}
+        ServerName {{ kibana4_cname }}
+        ServerAlias {{ kibana4_cname }}
+        ErrorLog logs/k4_ssl_error_log
+        TransferLog logs/k4_ssl_access_log
+        LogLevel warn
+        <Directory "/">
+            # Don't allow PUT or DELETE http commands
+            <Limit PUT DELETE POST>
+                    Require user 12Mg8kRpu2lOQS8RDjiOydHUApEh1RNV
+            </Limit>
+        </Directory>
+
+  # Send all to kibana4
+  <LocationMatch "^.*?">
+    ProxyPassMatch http://{{ ansible_nodename }}:5601
+    ProxyPassReverse http://{{ ansible_nodename }}:5601
+  </LocationMatch>
+
+</VirtualHost>

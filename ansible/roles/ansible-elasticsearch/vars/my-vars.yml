@@ -1,0 +1,41 @@
+---
+# Elasticsearch Ansible Variables
+
+elasticsearch_heap_size: 1g
+elasticsearch_max_open_files: 65535
+elasticsearch_max_locked_memory: unlimited
+elasticsearch_timezone: "Europe/Helsinki"
+elasticsearch_cluster_name: demo
+elasticsearch_node_name: "{{ ansible_hostname }}"
+elasticsearch_node_max_local_storage_nodes: 1
+elasticsearch_index_mapper_dynamic: "true"
+elasticsearch_memory_bootstrap_mlockall: "true"
+elasticsearch_gateway_type: local
+elasticsearch_gateway_recover_after_nodes: 1
+elasticsearch_gateway_recover_after_time: 2m
+elasticsearch_gateway_expected_nodes: 1
+elasticsearch_discovery_zen_minimum_master_nodes: 1
+elasticsearch_discovery_zen_ping_timeout: 30s
+elasticsearch_discovery_zen_ping_multicast_enabled: "true"
+#elasticsearch_discovery_zen_ping_unicast_hosts: ["{{ ansible_nodename }}"]
+elasticsearch_misc_auto_create_index: "true"
+elasticsearch_misc_query_bool_max_clause_count: 4096
+elasticsearch_sec_disable_delete_all_indices: "true"
+elasticsearch_sec_cluster_routing_allocation_disk_threshold_enabled: "true"
+elasticsearch_java_opts: "-XX:-UseSuperWord"
+elasticsearch_data_dir: "/data/elasticsearch"
+elasticsearch_conf_dir: "/etc/elasticsearch"
+elasticsearch_log_dir: "/var/log/elasticsearch"
+elasticsearch_backup_dir: "/elasticsearchbackup/es_backup"
+elasticsearch_service_startonboot: "yes"
+elasticsearch_install_java: "false"
+elasticsearch_network_http_port: "9199"
+elasticsearch_plugin_marvel_agent_enabled: "yes"
+elasticsearch_plugin_marvel_version: "latest"
+elasticsearch_plugins:
+  - { name: 'mobz/elasticsearch-head/latest', dirname: 'head', file: "index.html" }
+  - { name: 'royrusso/elasticsearch-HQ/latest', dirname: 'HQ', file: "index.html" }
+elasticsearch_script_disable_dynamic: "true"
+elasticsearch_http_cors_enabled: "true"
+elasticsearch_network_transport_tcp_compress: "true"
+elasticsearch_indices_recovery_max_bytes_per_sec: "100mb"

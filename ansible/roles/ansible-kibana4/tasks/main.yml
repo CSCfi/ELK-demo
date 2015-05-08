@@ -1,0 +1,48 @@
+---
+  - name: skip extracting files if this version already installed
+    stat: path={{ kibana4_path }}
+    tags: kibana4
+    register: kibana4path
+
+  - name: add logstash-web-kibana4 init script
+    template: src={{ kibana4_init_script }} dest=/etc/init.d/logstash-web-kibana4 owner=root group=root mode=0755 backup=yes
+    tags: kibana4
+    register: addkibana4initscript
+    when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true
+
+  - name: chkconfig --add logstash-web-kibana4
+    command: chkconfig --add logstash-web-kibana4
+    tags: kibana4
+    when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true and addkibana4initscript.changed
+
+  - name: copy in and unpack kibana4
+    unarchive: src=templates/kibana4-releases/kibana-{{ kibana4_version }}.tar.gz 
+               dest=/opt/
+               owner=logstash
+               group=csc
+    tags: kibana4
+    when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true and kibana4path.stat.exists == False
+
+  - name: set permissions and ownerships
+    file:      path=/opt/kibana-{{kibana4_version}}
+               owner=logstash
+               group=csc
+    tags: kibana4
+    when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true
+
+  - name: symlink /opt/kibana4 to /opt/current kibana version
+    file: src={{ kibana4_path }} dest={{ kibana4_symlink }} state=link
+    tags: kibana4
+    when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true
+
+  - name: send in kibana4's config.yml
+    template: src={{ kibana4_config_yml }} dest={{ kibana4_symlink }}/config/kibana.yml owner=root group=root mode=0644 backup=yes
+    tags: kibana4
+    when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true
+
+# Why does this fail?
+  - name: start logstash-web-kibana4 service
+    service: name=logstash-web-kibana4 enabled=yes state=started
+    tags: kibana4
+    when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true
+    ignore_errors: true

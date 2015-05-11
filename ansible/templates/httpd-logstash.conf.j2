@@ -3,16 +3,13 @@
 # Intention: Have ElasticSearch not directly accessible but instead
 #  proxied. To filter and pass all http connections to https.
 
-## 80 > and 9292 - this is the kibana web interface
+## 80 > /var/www/html/demo-kibana
 ## 80 > localhost:9199 for the allowed ES queries
-## 443 > localhost:9292 for all else (Kibana)
-## DNS:443 > localhost:5601 for all else (Kibana)
-## localhost:8444 > localhost:9199 for kibana4
+## 443 > localhost:5691 for kibana4
+## 8444 > localhost:9199 for kibana4 ES queries
 #
 
 NameVirtualHost 127.0.0.1:8444
-#NameVirtualHost {{ ansible_default_ipv4.address }}:80
-#NameVirtualHost {{ ansible_default_ipv4.address }}:443
 
 LoadModule proxy_module modules/mod_proxy.so
 LoadModule proxy_http_module modules/mod_proxy_http.so

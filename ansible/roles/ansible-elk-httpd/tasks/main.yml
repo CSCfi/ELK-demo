@@ -31,4 +31,4 @@
   - name: restart httpd if httpdconfig or certs has changed
     tags: httpd
     service: name=httpd state=restarted
-    when: httpdconfig.changed or httpdcerts.changed
+    when: httpdconfig.changed

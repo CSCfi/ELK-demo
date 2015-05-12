@@ -85,13 +85,13 @@
       - "guided.json"
       - "noted.json"
       - "logstash.json"
-     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
      use_kibana4_httpd: true
      kibana4_version: "4.0.1-linux-x64"
      kibana4_path: "/opt/kibana-{{ kibana4_version }}"
      kibana4_symlink: "/opt/kibana4"
      kibana4_config_yml: "templates/kibana4-demo-config.yml.j2"
      kibana4_init_script: "templates/kibana4-demo-logstash-web.init"
+#     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
    roles:
      - {role: ansible-logstash }
      - {role: ansible-kibana3 }

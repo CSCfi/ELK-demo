@@ -12,10 +12,10 @@ elasticsearch_index_mapper_dynamic: "true"
 elasticsearch_memory_bootstrap_mlockall: "true"
 elasticsearch_gateway_type: local
 elasticsearch_gateway_recover_after_nodes: 1
-elasticsearch_gateway_recover_after_time: 2m
+elasticsearch_gateway_recover_after_time: 10s
 elasticsearch_gateway_expected_nodes: 1
 elasticsearch_discovery_zen_minimum_master_nodes: 1
-elasticsearch_discovery_zen_ping_timeout: 30s
+elasticsearch_discovery_zen_ping_timeout: 5s
 elasticsearch_discovery_zen_ping_multicast_enabled: "true"
 #elasticsearch_discovery_zen_ping_unicast_hosts: ["{{ ansible_nodename }}"]
 elasticsearch_misc_auto_create_index: "true"

@@ -40,9 +40,16 @@
     tags: kibana4
     when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true
 
-# Why does this fail?
+# Why does this return code 2?
   - name: start logstash-web-kibana4 service
     service: name=logstash-web-kibana4 enabled=yes state=started
+    tags: kibana4
+    when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true
+    ignore_errors: true
+
+# Run it manually because init script and ansible are unhappy together
+  - name: start logstash-web-kibana4 service manually
+    shell: /etc/init.d/logstash-web-kibana4 start
     tags: kibana4
     when: ansible_distribution_major_version == "6" and use_kibana4_httpd == true
     ignore_errors: true

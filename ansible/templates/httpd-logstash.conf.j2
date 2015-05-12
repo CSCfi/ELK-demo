@@ -15,9 +15,9 @@ LoadModule proxy_module modules/mod_proxy.so
 LoadModule proxy_http_module modules/mod_proxy_http.so
 
 <VirtualHost *:80>
-        ServerAdmin admin@{{ ansible_nodename }}
-        ServerName {{ ansible_nodename }}
-        ServerAlias {{ ansible_nodename }}
+        ServerAdmin admin@{{ inventory_hostname }}
+        ServerName {{ inventory_hostname }}
+        ServerAlias {{ inventory_hostname }}
 	ErrorLog logs/error_log
 	TransferLog logs/access_log
 	LogLevel warn
@@ -130,9 +130,9 @@ Listen 8444
 
 Listen 443
 <VirtualHost *:443>
-        ServerAdmin admin@{{ kibana4_cname }}
-        ServerName {{ kibana4_cname }}
-        ServerAlias {{ kibana4_cname }}
+        ServerAdmin admin@{{ inventory_hostname }}
+        ServerName {{ inventory_hostname }}
+        ServerAlias {{ inventory_hostname }}
         ErrorLog logs/k4_ssl_error_log
         TransferLog logs/k4_ssl_access_log
         LogLevel warn

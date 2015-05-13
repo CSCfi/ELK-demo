@@ -1,0 +1,17 @@
+---
+
+# http://www.elastic.co/guide/en/elasticsearch/reference/current/docs-index_.html
+
+  - name: get the date of today
+    action: shell date '+%Y.%m.%d' 
+    register: mydate 
+
+  - name: print stdout sub-variable of variable mydate
+    debug: var=mydate["stdout"]
+
+  - name: write an event to es - to make initial testing of kibanas easier
+    shell: curl -XPUT 'http://localhost:9199/demo-{{ mydate["stdout"] }}/demo/{{ ansible_date_time[ "epoch" ] }}' -d 
+        '{ 
+        "message":"testing Elasticsearch",
+        "@timestamp":"{{ ansible_date_time["iso8601"] }}"
+        }'

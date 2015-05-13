@@ -31,17 +31,15 @@ Configure the firewall as necessary.
    * Allow remote TCP ports: 80 and 443 - both are HTTP - not https
 
 Check access:
-   * For example http://DNStomachine/demo-2015.05.18/_search?pretty should display something
+   * For example http://DNStomachine/demo-2015.05.18/\_search?pretty should display something
    * http://DNStomachine/ should re-direct to kibana3
    * http://DNStomachine:443/ should re-direct to kibana4
-   * http://DNStomachine/_cluster/health  -_ should show elasticsearch cluster health
+   * http://DNStomachine/\_cluster/health  - should show elasticsearch cluster health
 
 Kibana4:
-   * When accessing for the first time it asks for an index, enter: demo-2015* and then select @timestamp. This is to prevent it from matching the demo-kibana-int index.
+   * When accessing for the first time it asks for an index, enter: demo-2015\* and then select @timestamp. This is to prevent it from matching the demo-kibana-int index.
 
 Firewall for CentOS6 (assumes network firewalls/openstack security groups):
-
-_-
 
 <pre>
 

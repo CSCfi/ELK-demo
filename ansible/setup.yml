@@ -61,6 +61,7 @@
        - httpd
        - mod_ssl
        - mod_authz_ldap
+       - curl
      programs_on_boot:
        - logstash
        - httpd

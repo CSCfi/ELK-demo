@@ -21,7 +21,7 @@ Configuration:
    * Elasticsearch settings are done in ansible/roles/ansible-elasticsearch/vars/my-vars.yml
       * For example: 
 	* if you want to increase memory given to elasticsearch - increase elasticsearch_heap_size in my-vars.yml
-        * to put elasticsearch data edit the same file
+        * elasticsearch data directory is also configured here
       * Not all settings are actually used, see ansible/roles/ansible-elasticsearch/templates/ 
 
 Run ansible:

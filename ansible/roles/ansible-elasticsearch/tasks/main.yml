@@ -7,12 +7,17 @@
   stat: path={{ elasticsearch_data_dir }}
   register: p
 
+- name: Display p
+  debug: var=p
+
 # Configure directories
 - name: Configuring directories
   file: path={{ elasticsearch_log_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
   when: elasticsearch_log_dir is defined
+
 - file: path={{ elasticsearch_data_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
-  when: elasticsearch_data_dir is defined and p.stat.pw_name != {{ elasticsearch_user }}
+  when: elasticsearch_data_dir is defined and p.stat.exists == false
+
 - file: path={{ elasticsearch_work_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes
   when: elasticsearch_work_dir is defined
 - file: path={{ elasticsearch_conf_dir }} state=directory owner={{ elasticsearch_user }} group={{ elasticsearch_group }} recurse=yes

@@ -71,6 +71,7 @@
      logstashuser: "LS_USER=logstash"
      logstashgroup: "LS_GROUP=csc"
      kibana_elasticsearch_port: "80"
+     es_http_port: "9199"
      kibana_config_js: "templates/kibana-demo-config.js.j2"
      use_kibana3_httpd: true
      kibana_version: "3.1.2"
@@ -93,7 +94,8 @@
      kibana4_init_script: "templates/kibana4-demo-logstash-web.init"
 #     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
    roles:
-     - {role: ansible-logstash }
-     - {role: ansible-kibana3 }
-     - {role: ansible-kibana4 }
-     - {role: ansible-elk-httpd }
+     - {role: ansible-logstash, tags: [ 'logstash' ] }
+     - {role: ansible-kibana3, tags: [ 'kibana', 'kibana3' ] }
+     - {role: ansible-kibana4, tags: [ 'kibana', 'kibana4' ] }
+     - {role: ansible-elk-httpd, tags: [ 'kibana' ] }
+     - {role: ansible-elasticsearch-demo-event, tags: [ 'esput' ] }

@@ -93,6 +93,7 @@
      kibana4_symlink: "/opt/kibana4"
      kibana4_config_yml: "templates/kibana4-demo-config.yml.j2"
      kibana4_init_script: "templates/kibana4-demo-logstash-web.init"
+     add_td_repofile: "yes"
 #     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
    roles:
      - {role: ansible-logstash, tags: [ 'logstash' ] }
@@ -100,3 +101,4 @@
      - {role: ansible-kibana4, tags: [ 'kibana', 'kibana4' ] }
      - {role: ansible-elk-httpd, tags: [ 'kibana' ] }
      - {role: ansible-elasticsearch-demo-event, tags: [ 'esput' ] }
+     - {role: ansible-fluentd, tags: [ 'fluentd' ] }

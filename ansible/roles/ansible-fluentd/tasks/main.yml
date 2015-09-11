@@ -1,0 +1,15 @@
+---
+  - name: add TreasureData repo
+    template: src=templates/td.repo dest=/etc/yum.repos.d/td.repo owner=root group=root mode=0644
+    register: tdrepo
+    when: ansible_distribution_major_version == "6" and add_td_repofile == "yes"
+
+  - name: install td GPG key
+    rpm_key: key=http://packages.treasuredata.com/GPG-KEY-td-agent state=present
+
+  - name: install fluentd 
+    yum: "pkg=td-agent state=installed"
+
+  - name: enable services on boot
+    service: name=td-agent enabled=yes started=yes
+

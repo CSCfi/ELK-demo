@@ -10,7 +10,7 @@
 # cat $ANSIBLE_HOSTS:
 #[ELK]
 #IP_ADDRESS_HERE ansible_ssh_user=cloud-user
-# ansible-playbook dcache.yml
+# ansible-playbook setup.yml
 
 ##########
 
@@ -19,7 +19,7 @@
    sudo: yes
    vars:
      programs_to_install:
-       - java-1.7.0-openjdk
+       - java-1.8.0-openjdk
        - nc
        - nfs-utils
        - dstat
@@ -88,7 +88,7 @@
       - "noted.json"
       - "logstash.json"
      use_kibana4_httpd: true
-     kibana4_version: "4.0.1-linux-x64"
+     kibana4_version: "4.1.2-linux-x64"
      kibana4_path: "/opt/kibana-{{ kibana4_version }}"
      kibana4_symlink: "/opt/kibana4"
      kibana4_config_yml: "templates/kibana4-demo-config.yml.j2"

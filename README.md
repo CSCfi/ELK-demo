@@ -25,3 +25,8 @@ Here the logstash configs and patterns for the DEMO are stored.
 
    * To ingest some data:
       * /opt/logstash/bin/logstash agent -f /home/cloud-user/06-logstash-bf.conf
+
+fluentd
+=======
+
+Fluentd is also installed by default.

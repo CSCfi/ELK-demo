@@ -5,7 +5,7 @@
   - name: add logstash repo
     template: src=templates/logstash.repo.j2 dest=/etc/yum.repos.d/logstash.repo owner=root group=root mode=0644
     register: logstashrepo
-    when: ansible_distribution_major_version == "6" and add_logstash_repofile == "yes"
+    when: ansible_os_family == "RedHat" and add_logstash_repofile == "yes"
 
   - name: install software from logstash repo
     # If we set state=latest this takes a long time to run.

@@ -30,12 +30,12 @@
   - name: add elasticsearch repo
     template: src=templates/elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch.repo owner=root group=root mode=0644
     register: elasticrepo
-    when: ansible_distribution_major_version == "6" and add_es_repofile == "yes"
+    when: ansible_os_family == "RedHat" and add_es_repofile == "yes"
 
   - name: add elasticsearch GPG key
     template: src=templates/GPG-KEY-elasticsearch dest=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch owner=root group=root mode=0644
     register: elastickey
-    when: ansible_distribution_major_version == "6" and add_es_repogpgkey == "yes"
+    when: ansible_os_family == "RedHat" and add_es_repogpgkey == "yes"
 
   - name: install elasticsearch GPG key
     rpm_key: key=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch state=present

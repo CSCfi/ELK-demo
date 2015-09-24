@@ -1,6 +1,6 @@
 #### Selinux
 
-  - name: disable selinux
+  - name: set selinux to permissive
     selinux:  state=permissive policy=targeted
     register: selinuxchange
 

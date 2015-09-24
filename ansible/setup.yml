@@ -62,6 +62,11 @@
        - mod_ssl
        - mod_authz_ldap
        - curl
+     el7programs_to_install:
+       - logstash
+       - httpd
+       - mod_ssl
+       - curl
      programs_on_boot:
        - logstash
        - httpd

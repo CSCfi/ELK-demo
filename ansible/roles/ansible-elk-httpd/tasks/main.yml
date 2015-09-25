@@ -5,11 +5,11 @@
   - name: copy in httpd config file
     template: src=templates/httpd-logstash.conf.j2 dest=/etc/httpd/conf.d/logstash.conf owner=root group=root mode=0644 backup=yes
     register: httpdconfig
-    when: ansible_distribution_major_version == "6"
+    when: ansible_os_family == "RedHat"
 
   - name: write some garbage into ssl.conf - so it is not overwritten on httpd upgrades
     copy: content="# this file is unused" dest=/etc/httpd/conf.d/ssl.conf backup=yes
-    when: ansible_distribution_major_version == "6"
+    when: ansible_os_family == "RedHat"
 
   - name: install software from logstash repo
     # If we set state=latest this takes a long time to run.

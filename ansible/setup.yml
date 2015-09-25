@@ -99,6 +99,8 @@
      kibana4_config_yml: "templates/kibana4-demo-config.yml.j2"
      kibana4_init_script: "templates/kibana4-demo-logstash-web.init"
      install_fluentd: "yes"
+#       set logstash_prod_example to yes to configure logstash with redis and rsyslog input
+     logstash_prod_example: "yes"
 #     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
    roles:
      - {role: ansible-logstash, tags: [ 'logstash' ] }

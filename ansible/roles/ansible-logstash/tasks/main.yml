@@ -23,3 +23,29 @@
 
 # Here we could add some templates for logstash config
 # Also logstash -t (config test) can be used to verify the config.
+#
+
+  - name: add logstash prod_example config
+    template: src=../logstash/config/prod_example/logstash.conf dest=/etc/logstash/conf.d/logstash.conf owner=logstash group=root mode=0644
+    register: logstashconfig
+    when: ansible_os_family == "RedHat" and logstash_prod_example == "yes"
+
+  - name: install redis
+    yum: "pkg=redis state=installed"
+    when: ansible_distribution_major_version == "7" and logstash_prod_example == "yes"
+
+  - name: add redis config
+    template: src=../logstash/config/prod_example/redis.conf dest=/etc/redis.conf owner=redis group=root mode=0644
+    when: ansible_os_family == "RedHat" and logstash_prod_example == "yes"
+ 
+  - name: enable redis on boot
+    service: name=redis enabled=yes state=started
+    when: ansible_distribution_major_version == "7" and logstash_prod_example == "yes"
+
+  - name: start logstash on boot
+    service: name=redis state=started
+    when: logstash_prod_example == "yes"
+
+  - name: restart logstash on new config
+    service: name=logstash state=restarted
+    when: logstashconfig.changed

@@ -104,6 +104,6 @@
      - {role: ansible-logstash, tags: [ 'logstash' ] }
      - {role: ansible-kibana3, tags: [ 'kibana', 'kibana3' ] }
      - {role: ansible-kibana4, tags: [ 'kibana', 'kibana4' ] }
-     - {role: ansible-elk-httpd, tags: [ 'kibana' ] }
+     - {role: ansible-elk-httpd, tags: [ 'kibana', 'httpd' ] }
      - {role: ansible-elasticsearch-demo-event, tags: [ 'esput' ] }
      - {role: ansible-fluentd, tags: [ 'fluentd' ] }

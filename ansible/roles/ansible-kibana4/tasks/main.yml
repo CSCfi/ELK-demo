@@ -1,4 +1,4 @@
 ---
   - include: redhat.yml
-    when: ansible_os_family == "RedHat" use_kibana4_httpd == true and addkibana4initscript.changed
-    #when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6" and use_kibana4_httpd == true and addkibana4initscript.changed
+    when: ansible_os_family == "RedHat" and use_kibana4_httpd == true
+#    when: ansible_os_family == "RedHat" and use_kibana4_httpd == true and addkibana4initscript.changed

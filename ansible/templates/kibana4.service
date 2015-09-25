@@ -1,0 +1,12 @@
+[Service]
+ExecStart=/opt/kibana4/bin/kibana
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kibana4
+User=logstash
+Group=logstash
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

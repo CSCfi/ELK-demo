@@ -4,31 +4,32 @@
 
   - name: copy in httpd config file
     template: src=templates/httpd-logstash.conf.j2 dest=/etc/httpd/conf.d/logstash.conf owner=root group=root mode=0644 backup=yes
-    tags: httpd
     register: httpdconfig
     when: ansible_distribution_major_version == "6"
 
   - name: write some garbage into ssl.conf - so it is not overwritten on httpd upgrades
     copy: content="# this file is unused" dest=/etc/httpd/conf.d/ssl.conf backup=yes
-    tags: httpd
     when: ansible_distribution_major_version == "6"
 
   - name: install software from logstash repo
     # If we set state=latest this takes a long time to run.
     yum: "pkg={{item}} state=installed"
-    tags: httpd
     with_items: programs_to_install
+    when: ansible_distribution_major_version == "6"
+
+  - name: install software from logstash repo EL7
+    # If we set state=latest this takes a long time to run.
+    yum: "pkg={{item}} state=installed"
+    with_items: el7programs_to_install
+    when: ansible_distribution_major_version == "7"
 
   - name: enable services on boot
     service: name={{item}} enabled=yes
-    tags: httpd
     with_items: programs_on_boot
 
   - name: start httpd
-    tags: httpd
     service: name=httpd state=started
 
   - name: restart httpd if httpdconfig or certs has changed
-    tags: httpd
     service: name=httpd state=restarted
     when: httpdconfig.changed

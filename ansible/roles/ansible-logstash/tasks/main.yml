@@ -30,12 +30,38 @@
     register: logstashconfig
     when: ansible_os_family == "RedHat" and logstash_prod_example == "yes"
 
+  - name: create logstash/templates dir
+    file: path=/etc/logstash/templates state=directory owner=logstash mode=0755 group=root
+
   - name: add elasticsearch template
     template: src=../logstash/templates/es-template-demo.json dest=/etc/logstash/templates/es-template-demo.json owner=logstash group=root mode=0644
     register: estemplate
     when: ansible_os_family == "RedHat"
 
 ## TODO: Install template ( curl -XDELETE localhost:9199/_template/template-demo ; curl -XPUT http://localhost:9199/_template/template-demo -d @/etc/logstash/templates/es-template-demo.json )
+# If template does not exist you get this error:
+# failed: [oph-logs.csc.fi] => {"content": "{\"error\":\"IndexTemplateMissingException[index_template [template-demo] missing]\",\"status\":404}", "content_length": "94", "content_type": "application/json; charset=UTF-8", "failed": true, "json": {"error": "IndexTemplateMissingException[index_template [template-demo] missing]", "status": 404}, "redirected": false, "status": 404}
+# msg: Status code was not [200]
+#
+
+  - name: remove the existing template
+    uri: 
+     url: "http://localhost:9199/_template/template-demo"
+     method: "DELETE"
+     return_content: yes
+    register: removehttpout
+    when: estemplate.changed
+    ignore_errors: yes
+
+# The file sourced from git repo, not remote machine
+  - name: install the template
+    uri: 
+     url: "http://localhost:9199/_template/template-demo"
+     method: "PUT"
+     body: "{{ lookup('file', '../logstash/templates/es-template-demo.json') }}"
+     body_format: json
+    register: installestemplate
+    when: estemplate.changed
 
   - name: install redis
     yum: "pkg=redis state=installed"

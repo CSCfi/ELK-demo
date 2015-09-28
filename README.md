@@ -4,7 +4,7 @@ ansible
 Has the ansible playbook that sets up the ELK stack on a single VM - this VM could then be used to demo the ELK stack by giving the attendants a web interface where they can click around themselves.
 
 Requirements: 
-   * A VM with CentOS6 with Internet connectivity 
+   * A VM with CentOS6/CentOS7 with Internet connectivity 
       * Works with RFC1918 IP on interface, as long as it has a public IP (like from public pool in openstack)
    * 3.5GB RAM and 1 core is enough for small demo
 
@@ -30,3 +30,13 @@ fluentd
 =======
 
 Fluentd is also installed by default.
+
+prod\_example
+=============
+
+variable:
+<pre>logstash_prod_example: "yes"</pre>
+
+If this is set to yes then we'll install templates and logstash configs as found in ../logstash/configs/prod_example and ../logstash/templates/es-template-demo.json
+
+

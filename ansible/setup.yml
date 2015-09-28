@@ -98,6 +98,8 @@
      kibana4_symlink: "/opt/kibana4"
      kibana4_config_yml: "templates/kibana4-demo-config.yml.j2"
      kibana4_init_script: "templates/kibana4-demo-logstash-web.init"
+     # kibana4_https controls apache2's SSLEngine config 
+     kibana4_https: "on"
      install_fluentd: "yes"
 #       set logstash_prod_example to yes to configure logstash with redis and rsyslog input
      logstash_prod_example: "yes"

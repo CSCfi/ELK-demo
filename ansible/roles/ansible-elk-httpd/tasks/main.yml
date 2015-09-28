@@ -7,6 +7,11 @@
     register: httpdconfig
     when: ansible_os_family == "RedHat"
 
+  - name: copy in ssl config file if kibana4_https is set to on
+    template: src=templates/httpd-01ssl.conf.j2 dest=/etc/httpd/conf.d/01ssl.conf owner=root group=root mode=0644 backup=yes
+    register: httpdconfig2
+    when: ansible_os_family == "RedHat" and kibana4_https == "on"
+
   - name: write some garbage into ssl.conf - so it is not overwritten on httpd upgrades
     copy: content="# this file is unused" dest=/etc/httpd/conf.d/ssl.conf backup=yes
     when: ansible_os_family == "RedHat"
@@ -32,4 +37,4 @@
 
   - name: restart httpd if httpdconfig or certs has changed
     service: name=httpd state=restarted
-    when: httpdconfig.changed
+    when: httpdconfig.changed or httpdconfig2.changed

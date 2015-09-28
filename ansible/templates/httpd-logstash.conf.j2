@@ -135,6 +135,9 @@ Listen 443
         ServerAlias {{ inventory_hostname }}
         ErrorLog logs/k4_ssl_error_log
         TransferLog logs/k4_ssl_access_log
+	{% if kibana4_https is defined %}
+	SSLEngine on
+	{% endif %}
         LogLevel warn
         <Directory "/">
             # Don't allow PUT or DELETE http commands

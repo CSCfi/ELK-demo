@@ -129,6 +129,23 @@ Listen 8444
 </VirtualHost>
 
 Listen 443
+
+{% if kibana4_ldap %}
+# LDAP
+# http://httpd.apache.org/docs/2.4/mod/mod_authnz_ldap.html
+# http://serverfault.com/questions/514083/more-searchfilters-in-authldapurl
+# http://blog.mattcrampton.com/post/31254835293/iterating-over-a-dict-in-a-jinja-template
+
+  {% for ldapurl in AuthLDAPURL %}
+  <AuthnProviderAlias ldap ldap-{{ ldapurl["name"] }}>
+    AuthLDAPURL {{ ldapurl["uri"] }}
+    AuthLDAPBindDN "{{ AuthLDAPBindDN }}"
+    AuthLDAPBindPassword "{{ AuthLDAPBindPassword }}"
+    </AuthnProviderAlias>
+
+  {% endfor %}
+{% endif %}
+
 <VirtualHost *:443>
         ServerAdmin admin@{{ inventory_hostname }}
         ServerName {{ inventory_hostname }}
@@ -151,5 +168,21 @@ Listen 443
     ProxyPassMatch http://{{ ansible_nodename }}:5601
     ProxyPassReverse http://{{ ansible_nodename }}:5601
   </LocationMatch>
+
+{% if kibana4_ldap %}
+   # LDAP
+   <Location "/">
+   # TODO: get the AuthnProviderAliases out dynamically too
+   AuthName "{{ AuthName }}"
+   AuthBasicProvider ldap-group1 ldap-group2
+   AuthType Basic
+    
+   {% if require_users %}
+Require user "{{ require_users }}"
+   {% else %}
+Require valid-user
+   {% endif %}
+</Location>
+{% endif %}
 
 </VirtualHost>

@@ -25,6 +25,7 @@
        - dstat
        - python-httplib2
        - git
+       - openldap-clients
      programs_on_boot:
        - sshd
      bshell: "/bin/bash"
@@ -67,6 +68,7 @@
        - httpd
        - mod_ssl
        - curl
+       - mod_ldap
      programs_on_boot:
        - logstash
        - httpd
@@ -100,10 +102,15 @@
      kibana4_init_script: "templates/kibana4-demo-logstash-web.init"
      # kibana4_https controls apache2's SSLEngine config 
      kibana4_https: "on"
+     kibana4_ldap: True
      install_fluentd: "yes"
 #       set logstash_prod_example to yes to configure logstash with redis and rsyslog input
      logstash_prod_example: "yes"
 #     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
+   # secrets.yml contains binddn, password, search bases for the LDAP
+   # can be copied from roles/ansible-logstash/defaults/main.yml
+   vars_files: 
+     - secrets.yml
    roles:
      - {role: ansible-logstash, tags: [ 'logstash' ] }
      - {role: ansible-kibana3, tags: [ 'kibana', 'kibana3' ] }

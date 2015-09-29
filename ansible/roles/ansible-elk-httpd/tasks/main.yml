@@ -3,12 +3,12 @@
 #
 
   - name: copy in httpd config file
-    template: src=templates/httpd-logstash.conf.j2 dest=/etc/httpd/conf.d/logstash.conf owner=root group=root mode=0644 backup=yes
+    template: src=templates/httpd-logstash.conf.j2 dest=/etc/httpd/conf.d/logstash.conf owner=apache group=apache mode=0640 backup=yes
     register: httpdconfig
     when: ansible_os_family == "RedHat"
 
   - name: copy in ssl config file if kibana4_https is set to on
-    template: src=templates/httpd-01ssl.conf.j2 dest=/etc/httpd/conf.d/01ssl.conf owner=root group=root mode=0644 backup=yes
+    template: src=templates/httpd-01ssl.conf.j2 dest=/etc/httpd/conf.d/01ssl.conf owner=apache group=apache mode=0640 backup=yes
     register: httpdconfig2
     when: ansible_os_family == "RedHat" and kibana4_https == "on"
 

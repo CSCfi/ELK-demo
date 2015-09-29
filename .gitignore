@@ -1,2 +1,7 @@
+# - the logstash and redis.conf should be copied from logstash-example.conf and edited locally
 logstash.conf
 redis.conf
+# - this contains LDAP search things
+secrets.yml
+# no vim swap files
+*.swp

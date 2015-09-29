@@ -28,6 +28,7 @@
        - openldap-clients
      programs_on_boot:
        - sshd
+       - ntpd
      bshell: "/bin/bash"
      moregroups: esbackup
      esuser:

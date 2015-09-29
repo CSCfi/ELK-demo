@@ -13,6 +13,7 @@ Run ansible:
 
 Configure the firewall as necessary.
    * Allow remote TCP ports: 80 and 443 - both are HTTP - not https
+   * /etc/ntp.conf is not managed default but the service is set to start on boot
 
 Demo! 
 

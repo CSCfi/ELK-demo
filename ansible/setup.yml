@@ -41,7 +41,7 @@
        - { name: esbackup, gid: 54444 }
      add_es_repofile: "yes"
      add_es_repogpgkey: "yes"
-     install_es_plugins: "no"
+     install_es_plugins: "yes"
      add_logstash_user: "no"
    vars_files:
      - roles/ansible-elasticsearch/defaults/main.yml

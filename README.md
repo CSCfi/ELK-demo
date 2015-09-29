@@ -39,4 +39,22 @@ variable:
 
 If this is set to yes then we'll install templates and logstash configs as found in ../logstash/configs/prod_example and ../logstash/templates/es-template-demo.json
 
+https for kibana4
+======================
 
+configurable by setting
+<pre>kibana4_https: "on"
+</pre>
+
+Requires x509 certificates installed into /etc/pki/tls/certs/hostcert.pem and /etc/pki/tls/private/hostkey.pem - this is not handled by this playbook
+
+ldaps for kibana4
+======================
+
+configurable by setting 
+<pre>kibana4_ldap: True
+</pre>
+
+Requires a secrets.yml in ansible/secrets.yml
+
+Example of that is found in ansible/roles/ansible-elk-httpd/defaults/main.yml

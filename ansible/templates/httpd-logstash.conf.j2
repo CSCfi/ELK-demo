@@ -174,7 +174,7 @@ Listen 443
    <Location "/">
    # TODO: get the AuthnProviderAliases out dynamically too
    AuthName "{{ AuthName }}"
-   AuthBasicProvider ldap-group1 ldap-group2
+   AuthBasicProvider ldap-group1 ldap-group2 ldap-group3
    AuthType Basic
     
    {% if require_users %}

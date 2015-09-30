@@ -8,6 +8,7 @@ AuthLDAPBindPassword: "changeme"
 AuthLDAPURL: 
    - { name: "group1", uri: "ldaps://ldap1.example.com/ou=Users,dc=example,dc=com?uid??(ou=Mracketing)" }
    - { name: "group2", uri: "ldaps://ldap1.example.com/ou=Users,dc=example,dc=com?uid??(ou=Fninance)" }
+   - { name: "group3", uri: "ldaps://ldap1.example.com/ou=Users,dc=example,dc=com?uid??(memberOf=ou=Users,dc=example,dc=com)" }
 # AuthLDAPURL - group1 and group2 are hard coded in the httpd-logstash.conf.j2 template
 # require_users - a space separated list - if not set then Require valid-user
 require_users: ""

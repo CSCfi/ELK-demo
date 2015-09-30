@@ -1,5 +1,8 @@
 {
   "template" : "demo-2*",
+  "aliases" : {
+    "demo" : {}
+  },
   "settings" : {
     "index.refresh_interval" : "5s"
   },

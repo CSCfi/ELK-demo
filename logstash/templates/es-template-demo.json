@@ -5,7 +5,7 @@
   },
   "mappings" : {
     "_default_" : {
-       "_all" : {"enabled" : true},
+       "_all" : {"enabled" : true, "index": "not_analyzed", "doc_value" : true },
        "dynamic_templates" : [ {
          "string_fields" : {
            "match" : "*",

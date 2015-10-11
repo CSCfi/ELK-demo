@@ -58,21 +58,6 @@
    hosts: ELK
    sudo: yes
    vars:
-     programs_to_install:
-       - logstash
-       - httpd
-       - mod_ssl
-       - mod_authz_ldap
-       - curl
-     el7programs_to_install:
-       - logstash
-       - httpd
-       - mod_ssl
-       - curl
-       - mod_ldap
-     programs_on_boot:
-       - logstash
-       - httpd
      elasticsearch_index_base: "demo"
      esb: "{{ elasticsearch_index_base }}"
      add_logstash_repofile: True

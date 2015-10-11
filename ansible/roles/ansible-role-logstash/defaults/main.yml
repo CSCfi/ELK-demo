@@ -23,3 +23,5 @@ programs_on_boot:
   - httpd
 
 logstash_prod_example: True
+
+logstash_version: "1.5"

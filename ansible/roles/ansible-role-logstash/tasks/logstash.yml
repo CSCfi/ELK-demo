@@ -3,7 +3,7 @@
 #    yum: pkg=* state=latest
 
   - name: add logstash repo
-    template: src=templates/logstash.repo.j2 dest=/etc/yum.repos.d/logstash.repo owner=root group=root mode=0644
+    template: src=logstash.repo.j2 dest=/etc/yum.repos.d/logstash.repo owner=root group=root mode=0644
     register: logstashrepo
     when: ansible_os_family == "RedHat" and add_logstash_repofile
 

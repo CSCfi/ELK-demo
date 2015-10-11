@@ -75,7 +75,7 @@
        - httpd
      elasticsearch_index_base: "demo"
      esb: "{{ elasticsearch_index_base }}"
-     add_logstash_repofile: "yes"
+     add_logstash_repofile: True
      logstash_version: "1.4"
      logstashuser: "LS_USER=logstash"
      logstashgroup: "LS_GROUP=csc"
@@ -106,7 +106,7 @@
      kibana4_ldap: True
      install_fluentd: "yes"
 #       set logstash_prod_example to yes to configure logstash with redis and rsyslog input
-     logstash_prod_example: "yes"
+     logstash_prod_example: True
 #     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
    # secrets.yml contains binddn, password, search bases for the LDAP
    # can be copied from roles/ansible-logstash/defaults/main.yml

@@ -60,9 +60,6 @@
    vars:
      elasticsearch_index_base: "demo"
      esb: "{{ elasticsearch_index_base }}"
-     logstash_version: "1.4"
-     logstashuser: "LS_USER=logstash"
-     logstashgroup: "LS_GROUP=csc"
      kibana_elasticsearch_port: "80"
      es_http_port: "9199"
      kibana_config_js: "templates/kibana-demo-config.js.j2"

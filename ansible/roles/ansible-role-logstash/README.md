@@ -8,6 +8,7 @@ Role Variables
 
  - logstash\_prod\_example: True
  - add\_logstash\_repofile: True
+  -  set to True to configure logstash with redis and rsyslog input
 
 Dependencies
 ============

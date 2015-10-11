@@ -5,7 +5,7 @@
   - name: add logstash repo
     template: src=templates/logstash.repo.j2 dest=/etc/yum.repos.d/logstash.repo owner=root group=root mode=0644
     register: logstashrepo
-    when: ansible_os_family == "RedHat" and add_logstash_repofile == "yes"
+    when: ansible_os_family == "RedHat" and add_logstash_repofile
 
   - name: install software from logstash repo
     yum: "pkg={{item}} state=installed"
@@ -28,7 +28,7 @@
   - name: add logstash prod_example config
     template: src=../logstash/config/prod_example/logstash.conf dest=/etc/logstash/conf.d/logstash.conf owner=logstash group=root mode=0644
     register: logstashconfig
-    when: ansible_os_family == "RedHat" and logstash_prod_example == "yes"
+    when: ansible_os_family == "RedHat" and logstash_prod_example
 
   - name: create logstash/templates dir
     file: path=/etc/logstash/templates state=directory owner=logstash mode=0755 group=root
@@ -65,20 +65,20 @@
 
   - name: install redis
     yum: "pkg=redis state=installed"
-    when: ansible_distribution_major_version == "7" and logstash_prod_example == "yes"
+    when: ansible_distribution_major_version == "7" and logstash_prod_example
 
   - name: add redis config
     template: src=../logstash/config/prod_example/redis.conf dest=/etc/redis.conf owner=redis group=root mode=0644 backup=yes
     register: redisconfig
-    when: ansible_os_family == "RedHat" and logstash_prod_example == "yes"
+    when: ansible_os_family == "RedHat" and logstash_prod_example
  
   - name: enable redis on boot
     service: name=redis enabled=yes state=started
-    when: ansible_distribution_major_version == "7" and logstash_prod_example == "yes"
+    when: ansible_distribution_major_version == "7" and logstash_prod_example
 
   - name: start logstash on boot
     service: name=redis state=started
-    when: logstash_prod_example == "yes"
+    when: logstash_prod_example
 
   - name: restart logstash on new config
     service: name=logstash state=restarted

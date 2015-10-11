@@ -1,6 +1,9 @@
 ---
 # defaults for ansible-role-logstash
 #
+
+configure_logstash: True
+
 add_logstash_repofile : True
 
 programs_to_install:

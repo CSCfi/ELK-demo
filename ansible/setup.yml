@@ -64,6 +64,7 @@
      esb: "{{ elasticsearch_index_base }}"
      kibana_elasticsearch_port: "80"
      es_http_port: "9199"
+     es_address: "localhost"
      kibana_interval: "day"
      kibana_pattern: "[demo-]YYYY.MM.DD"
      kibana_default: "[demo-]YYYY.MM.DD"

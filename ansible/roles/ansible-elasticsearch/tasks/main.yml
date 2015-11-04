@@ -33,14 +33,25 @@
 # Configure Elasticsearch Node
 - name: Configuring Elasticsearch Node
   template: src=elasticsearch_csc.yml.j2 dest={{ elasticsearch_conf_dir }}/elasticsearch.yml owner={{ elasticsearch_user }} group={{ elasticsearch_group }} mode=0644 backup=yes
-  when: elasticsearch_conf_dir is defined
+  when: elasticsearch_conf_dir is defined and elasticsearch_install_version != "2.x"
   tags: elasticsearch
   register: configured_elasticsearch
+
+- name: Configuring Elasticsearch Node 2.x
+  template: src=elasticsearch_csc_2.x.yml.j2 dest={{ elasticsearch_conf_dir }}/elasticsearch.yml owner={{ elasticsearch_user }} group={{ elasticsearch_group }} mode=0644 backup=yes
+  when: elasticsearch_conf_dir is defined and elasticsearch_install_version == "2.x"
+  tags: elasticsearch
+  register: configured_elasticsearch2
+
+
 - template: src=elasticsearch_csc.default.j2 dest=/etc/sysconfig/elasticsearch owner={{ elasticsearch_user }} group={{ elasticsearch_group }} mode=0644 backup=yes
 
 # Install Other Generic Plugins
 - include: plugins.yml
-  when: (elasticsearch_plugins is defined)
+  when: (elasticsearch_plugins is defined and elasticsearch_install_version != "2.x")
+
+- include: plugins2x.yml
+  when: (elasticsearch_plugins is defined and elasticsearch_install_version == "2.x")
 
 # Install Marvel Plugin
 #- include: marvel.yml
@@ -50,7 +61,7 @@
 - name: Restarting Elasticsearch
   service: name=elasticsearch state=restarted
   tags: elasticsearch
-  when: configured_elasticsearch.changed
+  when: configured_elasticsearch.changed or configured_elasticsearch2.changed
 
 # Register Elasticsearch service to start on boot
 - name: Ensure Elasticsearch is started on boot

@@ -39,6 +39,7 @@
        - { name: csc, gid: 101 }
        - { name: elasticsearch, gid: 201 }
        - { name: esbackup, gid: 54444 }
+     elasticsearch_install_version: "2.x"
      add_es_repofile: "yes"
      add_es_repogpgkey: "yes"
      install_es_plugins: "yes"
@@ -58,26 +59,16 @@
    hosts: ELK
    sudo: yes
    vars:
+     logstash_version: "2.0"
      elasticsearch_index_base: "demo"
      esb: "{{ elasticsearch_index_base }}"
      kibana_elasticsearch_port: "80"
      es_http_port: "9199"
-     kibana_config_js: "templates/kibana-demo-config.js.j2"
-     use_kibana3_httpd: true
-     kibana_version: "3.1.2"
-     kibana3_path: "/var/www/html/kibana-{{ kibana_version }}"
-     kibana3_symlink: "/var/www/html/demo-kibana"
      kibana_interval: "day"
      kibana_pattern: "[demo-]YYYY.MM.DD"
      kibana_default: "[demo-]YYYY.MM.DD"
-     kibana_dashboards:
-      - "blank.json"
-      - "README_MANAGED_BY_ANSIBLE.txt"
-      - "guided.json"
-      - "noted.json"
-      - "logstash.json"
      use_kibana4_httpd: true
-     kibana4_version: "4.1.2-linux-x64"
+     kibana4_version: "4.2.0-linux-x64"
      kibana4_path: "/opt/kibana-{{ kibana4_version }}"
      kibana4_symlink: "/opt/kibana4"
      kibana4_config_yml: "templates/kibana4-demo-config.yml.j2"
@@ -93,7 +84,7 @@
      - secrets.yml
    roles:
      - {role: ansible-role-logstash, tags: [ 'logstash' ] }
-     - {role: ansible-kibana3, tags: [ 'kibana', 'kibana3' ] }
+#     - {role: ansible-kibana3, tags: [ 'kibana', 'kibana3' ] }
      - {role: ansible-kibana4, tags: [ 'kibana', 'kibana4' ] }
      - {role: ansible-elk-httpd, tags: [ 'kibana', 'httpd' ] }
      - {role: ansible-elasticsearch-demo-event, tags: [ 'esput' ] }

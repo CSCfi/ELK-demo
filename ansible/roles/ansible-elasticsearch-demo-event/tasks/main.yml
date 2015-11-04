@@ -6,12 +6,26 @@
     action: shell date '+%Y.%m.%d' 
     register: mydate 
 
+  - name: get the month of today
+    action: shell date '+%Y.%m' 
+    register: mymonth
+
   - name: print stdout sub-variable of variable mydate
     debug: var=mydate["stdout"]
+
+  - name: print stdout sub-variable of variable mymonth
+    debug: var=mymonth["stdout"]
 
   - name: write an event to es - to make initial testing of kibanas easier
     shell: curl -XPUT 'http://localhost:9199/demo-{{ mydate["stdout"] }}/demo/{{ ansible_date_time[ "epoch" ] }}' -d 
         '{ 
         "message":"testing Elasticsearch",
+        "@timestamp":"{{ ansible_date_time["iso8601"] }}"
+        }'
+
+  - name: write an event to es demo alias - to make initial testing of kibanas easier
+    shell: curl -XPUT 'http://localhost:9199/demo-{{ mymonth["stdout"] }}/demo/1{{ ansible_date_time[ "epoch" ] }}' -d 
+        '{ 
+        "message":"testing Elasticsearch demo alias",
         "@timestamp":"{{ ansible_date_time["iso8601"] }}"
         }'

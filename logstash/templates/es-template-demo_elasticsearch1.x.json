@@ -8,32 +8,26 @@
   },
   "mappings" : {
     "_default_" : {
-       "_all" : {"enabled" : true, "omit_norms" : true},
+       "_all" : {"enabled" : true, "index": "not_analyzed", "doc_value" : true },
        "dynamic_templates" : [ {
-         "message_field" : {
-           "match" : "message",
-           "match_mapping_type" : "string",
-           "mapping" : {
-             "type" : "string", "index" : "not_analyzed", "omit_norms" : true
-           }
-         }
-       }, {
          "string_fields" : {
            "match" : "*",
            "match_mapping_type" : "string",
            "mapping" : {
-             "type" : "string", "index" : "analyzed", "omit_norms" : true,
+             "type" : "string", "index" : "not_analyzed", "omit_norms" : true, "doc_value" : true,
                "fields" : {
-                 "raw" : {"type": "string", "index" : "not_analyzed", "ignore_above" : 256, "doc_value" : true}
+                 "raw" : {"type": "string", "index" : "not_analyzed", "ignore_above" : 256, "doc_value" : true }
                }
            }
          }
        } ],
        "properties" : {
          "@version": { "type": "string", "index": "not_analyzed", "doc_value" : true },
+ 	 "type": { "type": "string", "index": "not_analyzed", "doc_value" : true },
          "geoip"  : {
            "type" : "object",
              "dynamic": true,
+             "path": "full",
              "properties" : {
                "location" : { "type" : "geo_point" }
              }

@@ -1,0 +1,4 @@
+---
+# defaults for ansible-kibana4
+kibana4_plugins: 
+ - "kibana/timelion"

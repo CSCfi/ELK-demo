@@ -41,6 +41,16 @@
   - name: Display cluster health
     debug: var=clusterhealth
 
+  - name: install kibana4 plugin show no process, timeout after 30s
+    command: /opt/kibana4/bin/kibana plugin -s -t 30 -i {{ item }}
+    when: kibana4_plugins.0 != ""
+    with_items: kibana4_plugins
+    register: kibana4_plugin_install
+    ignore_errors: True
+
+  - name: Display kibana_plugin_install
+    debug: var=kibana4_plugin_install
+
 # Why does this return code 2 even though it is "started"?
   - name: start logstash-web-kibana4 service
     service: name=logstash-web-kibana4 enabled=yes state=started
@@ -50,3 +60,7 @@
   - name: start kibana4 service EL7
     service: name=kibana4 enabled=yes state=started
     when: ansible_distribution_major_version == "7"
+
+  - name: restart kibana4 service EL7 if plugin was installed
+    service: name=kibana4 state=restarted
+    when: ansible_distribution_major_version == "7" and kibana4_plugin_install.changed and kibana4_plugin_install.failed != True

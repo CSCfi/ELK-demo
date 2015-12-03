@@ -26,6 +26,7 @@
        - python-httplib2
        - git
        - openldap-clients
+       - bash-completion
      programs_on_boot:
        - sshd
        - ntpd
@@ -59,7 +60,7 @@
    hosts: ELK
    sudo: yes
    vars:
-     logstash_version: "2.0"
+     logstash_version: "2.1"
      elasticsearch_index_base: "demo"
      esb: "{{ elasticsearch_index_base }}"
      kibana_elasticsearch_port: "80"
@@ -69,7 +70,7 @@
      kibana_pattern: "[demo-]YYYY.MM.DD"
      kibana_default: "[demo-]YYYY.MM.DD"
      use_kibana4_httpd: true
-     kibana4_version: "4.2.0-linux-x64"
+     kibana4_version: "4.3.0-linux-x64"
      kibana4_path: "/opt/kibana-{{ kibana4_version }}"
      kibana4_symlink: "/opt/kibana4"
      kibana4_config_yml: "templates/kibana4-demo-config.yml.j2"

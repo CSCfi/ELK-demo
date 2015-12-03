@@ -27,7 +27,7 @@
    roles:
      - {role: ansible-role-elk, tags: [ 'elasticsearch' ] }
      - {role: selinux-permissive, tags: [ 'selinux' ] }
-     - {role: ansible-elasticsearch, tags: [ 'elasticsearch' ] }
+     - {role: ansible-role-elasticsearch, tags: [ 'elasticsearch' ] }
 
 ##########
 

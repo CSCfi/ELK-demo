@@ -21,8 +21,8 @@
      elasticsearch_install_version: "2.x"
      install_es_plugins: "yes"
    vars_files:
-     - roles/ansible-elasticsearch/defaults/main.yml
-     - roles/ansible-elasticsearch/vars/my-vars.yml
+     - roles/ansible-role-elasticsearch/defaults/main.yml
+     - roles/ansible-role-elasticsearch/vars/my-vars.yml
       
    roles:
      - {role: ansible-role-elk, tags: [ 'elasticsearch' ] }

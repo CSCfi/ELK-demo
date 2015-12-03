@@ -1,0 +1,5 @@
+---
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elk
+  path: roles
+

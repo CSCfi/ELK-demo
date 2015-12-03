@@ -18,39 +18,14 @@
    hosts: ELK
    sudo: yes
    vars:
-     programs_to_install:
-       - java-1.8.0-openjdk
-       - nc
-       - nfs-utils
-       - dstat
-       - python-httplib2
-       - git
-       - openldap-clients
-       - bash-completion
-     programs_on_boot:
-       - sshd
-       - ntpd
-     bshell: "/bin/bash"
-     moregroups: esbackup
-     esuser:
-       - { name: elasticsearch, uid: 498, group: elasticsearch, groups: "{{moregroups}}", shell: "{{bshell}}" }
-     lsuser:
-       - { name: logstash, groups: "{{moregroups}}" }
-     cscgroups:
-       - { name: csc, gid: 101 }
-       - { name: elasticsearch, gid: 201 }
-       - { name: esbackup, gid: 54444 }
      elasticsearch_install_version: "2.x"
-     add_es_repofile: "yes"
-     add_es_repogpgkey: "yes"
      install_es_plugins: "yes"
-     add_logstash_user: "no"
    vars_files:
      - roles/ansible-elasticsearch/defaults/main.yml
      - roles/ansible-elasticsearch/vars/my-vars.yml
       
    roles:
-     - {role: ELK, tags: [ 'elasticsearch' ] }
+     - {role: ansible-role-elk, tags: [ 'elasticsearch' ] }
      - {role: selinux-permissive, tags: [ 'selinux' ] }
      - {role: ansible-elasticsearch, tags: [ 'elasticsearch' ] }
 

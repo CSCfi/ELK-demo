@@ -1,7 +1,0 @@
-# {{ ansible_managed }}
-[elasticsearch-{{ elasticsearch_install_version }}]
-name=elasticsearch repository for {{ elasticsearch_install_version }} packages
-baseurl=http://packages.elastic.co/elasticsearch/{{ elasticsearch_install_version }}/centos
-gpgcheck=1
-gpgkey=http://packages.elasticsearch.org/GPG-KEY-elasticsearch
-enabled=1

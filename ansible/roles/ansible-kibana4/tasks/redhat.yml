@@ -27,12 +27,14 @@
     file:      path=/opt/kibana-{{kibana4_version}}
                owner=logstash
                group=csc
+               recurse=yes
 
   - name: symlink /opt/kibana4 to /opt/current kibana version
     file: src={{ kibana4_path }} dest={{ kibana4_symlink }} state=link
 
   - name: send in kibana4's config.yml
     template: src={{ kibana4_config_yml }} dest={{ kibana4_symlink }}/config/kibana.yml owner=root group=root mode=0644 backup=yes
+    register: reg_kibana4_config_file
 
   - name: grab cluster health
     action: uri url=http://localhost:{{ es_http_port }}/_cluster/health return_content=yes
@@ -64,3 +66,7 @@
   - name: restart kibana4 service EL7 if plugin was installed
     service: name=kibana4 state=restarted
     when: ansible_distribution_major_version == "7" and kibana4_plugin_install.changed and kibana4_plugin_install.failed != True
+
+  - name: restart kibana4 service EL7 if config changed
+    service: name=kibana4 state=restarted
+    when: ansible_distribution_major_version == "7" and reg_kibana4_config_file.changed

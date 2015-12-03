@@ -33,7 +33,7 @@
     file: src={{ kibana4_path }} dest={{ kibana4_symlink }} state=link
 
   - name: send in kibana4's config.yml
-    template: src={{ kibana4_config_yml }} dest={{ kibana4_symlink }}/config/kibana.yml owner=root group=root mode=0644 backup=yes
+    template: src={{ kibana4_config_yml }} dest={{ kibana4_symlink }}/config/kibana.yml owner=logstash group=csc mode=0644 backup=yes
     register: reg_kibana4_config_file
 
   - name: grab cluster health

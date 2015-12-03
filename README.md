@@ -9,6 +9,7 @@ Requirements:
    * 3.5GB RAM and 1 core is enough for small demo
 
 Run ansible:
+   * ansible-galaxy install -r requirements.yml
    * ansible-playbook -i ansible-inventory setup.yml
 
 Configure the firewall as necessary.

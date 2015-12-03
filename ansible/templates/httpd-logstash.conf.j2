@@ -126,6 +126,12 @@ Listen 8444
     ProxyPassReverse http://{{ es_address }}:9199
   </LocationMatch>
 
+  # And this: /demo-*/_field_stats?level=indices
+  <LocationMatch "^(/{{ esb }}.*/_field_stats.*)$">
+    ProxyPassMatch http://{{ es_address }}:9199
+    ProxyPassReverse http://{{ es_address }}:9199
+  </LocationMatch>
+
 </VirtualHost>
 
 Listen 443

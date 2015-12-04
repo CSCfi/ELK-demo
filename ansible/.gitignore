@@ -6,4 +6,4 @@ roles/ansible-role-fluentd
 roles/ansible-role-elk-httpd
 roles/ansible-role-kibana4
 roles/ansible-role-selinux
-roles/ansible-role-logstash
+roles/ansible-role-logstash-demo

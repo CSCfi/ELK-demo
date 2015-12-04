@@ -8,7 +8,7 @@ Some roles depend on the files in ../logstash/
 $EDITOR ansible-inventory
 ansible-galaxy install -r requirements.yml
 ansible-playbook -i ansible-inventory setup.yml
-</per>
+</pre>
 
 All the variables are set as defaults in their roles, if you'd like to change any I'd suggest putting them in group_vars/ELK/ELK.yml:
 

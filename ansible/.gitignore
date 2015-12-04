@@ -5,3 +5,4 @@ roles/ansible-role-elasticsearch-demo-event
 roles/ansible-role-fluentd
 roles/ansible-role-elk-httpd
 roles/ansible-role-kibana4
+roles/ansible-role-selinux

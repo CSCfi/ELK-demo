@@ -3,14 +3,7 @@
 # Used by CSC.fi during 2015. 
 # Sources: https://github.com/Traackr/ansible-elasticsearch
 # All roles in here are meant to be re-playable and should be considered "safe".
-# Many host specific things inside configs etc..
 # Written by Johan Guldmyr
-#
-# export ANSIBLE_HOSTS=$HOME/ansible-hosts
-# cat $ANSIBLE_HOSTS:
-#[ELK]
-#IP_ADDRESS_HERE ansible_ssh_user=cloud-user
-# ansible-playbook setup.yml
 
 ##########
 

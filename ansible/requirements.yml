@@ -8,3 +8,6 @@
 
 - src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elasticsearch-demo-event
   path: roles
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-fluentd
+  path: roles

@@ -53,7 +53,6 @@
      # kibana4_https controls apache2's SSLEngine config 
      kibana4_https: "on"
      kibana4_ldap: True
-     install_fluentd: "yes"
 #     kibana4_cname: "vm0444.kaj.pouta.csc.fi"
    # secrets.yml contains binddn, password, search bases for the LDAP
    # can be copied from roles/ansible-logstash/defaults/main.yml
@@ -65,4 +64,4 @@
      - {role: ansible-kibana4, tags: [ 'kibana', 'kibana4' ] }
      - {role: ansible-elk-httpd, tags: [ 'kibana', 'httpd' ] }
      - {role: ansible-role-elasticsearch-demo-event, tags: [ 'esput' ] }
-     - {role: ansible-fluentd, tags: [ 'fluentd' ] }
+     - {role: ansible-role-fluentd, tags: [ 'fluentd' ] }

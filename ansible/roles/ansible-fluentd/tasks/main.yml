@@ -1,3 +1,0 @@
----
-  - include: redhat.yml
-    when: ansible_os_family == "RedHat" and install_fluentd == "yes"

@@ -59,4 +59,4 @@ configurable by setting
 
 Requires a secrets.yml in ansible/secrets.yml
 
-Example of that is found in ansible/roles/ansible-elk-httpd/defaults/main.yml
+Example of that file is found in ansible/roles/ansible-role-elk-httpd/defaults/main.yml

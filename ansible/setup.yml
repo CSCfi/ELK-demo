@@ -17,9 +17,6 @@
  - name: configuring all the common services
    hosts: ELK
    sudo: yes
-   vars:
-     elasticsearch_install_version: "2.x"
-     install_es_plugins: "yes"
    vars_files:
      - roles/ansible-role-elasticsearch/defaults/main.yml
      - roles/ansible-role-elasticsearch/vars/my-vars.yml
@@ -35,12 +32,6 @@
    hosts: ELK
    sudo: yes
    vars:
-     logstash_version: "2.1"
-     elasticsearch_index_base: "demo"
-     esb: "{{ elasticsearch_index_base }}"
-     kibana_elasticsearch_port: "80"
-     es_address: "localhost"
-     use_kibana4_httpd: true
    # secrets.yml contains binddn, password, search bases for the LDAP
    # can be copied from roles/ansible-logstash/defaults/main.yml
    vars_files: 

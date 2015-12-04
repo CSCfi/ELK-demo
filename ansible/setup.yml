@@ -37,7 +37,7 @@
    vars_files: 
      - secrets.yml
    roles:
-     - {role: ansible-role-logstash, tags: [ 'logstash' ] }
+     - {role: ansible-role-logstash-demo, tags: [ 'logstash' ] }
      - {role: ansible-role-kibana4, tags: [ 'kibana', 'kibana4' ] }
      - {role: ansible-role-elk-httpd, tags: [ 'kibana', 'httpd' ] }
      - {role: ansible-role-elasticsearch-demo-event, tags: [ 'esput' ] }

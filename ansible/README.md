@@ -8,6 +8,7 @@ Some roles depend on the files in ../logstash/
 cp ansible-inventory inventory
 $EDITOR inventory
 cp secrets-example.yml secrets.yml
+# or better run: ansible-vault create secrets.yml
 $EDITOR secrets.yml
 ansible-galaxy install -r requirements.yml
 ansible-playbook -i inventory setup.yml

@@ -14,3 +14,6 @@
 
 - src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elk-httpd
   path: roles
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-kibana4
+  path: roles

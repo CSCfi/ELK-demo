@@ -1,5 +1,0 @@
----
-
-  - include: logstash.yml
-    when: configure_logstash
-

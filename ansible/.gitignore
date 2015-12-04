@@ -1,3 +1,4 @@
 inventory
 roles/ansible-role-elk
 roles/ansible-role-elasticsearch
+roles/ansible-role-elasticsearch-demo-event

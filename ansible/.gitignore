@@ -1,9 +1,3 @@
 inventory
-roles/ansible-role-elk
-roles/ansible-role-elasticsearch
-roles/ansible-role-elasticsearch-demo-event
-roles/ansible-role-fluentd
-roles/ansible-role-elk-httpd
-roles/ansible-role-kibana4
-roles/ansible-role-selinux
-roles/ansible-role-logstash-demo
+roles/ansible-role-*
+secrets.yml

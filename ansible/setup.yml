@@ -35,3 +35,5 @@
      - {role: ansible-role-elk-httpd, tags: [ 'kibana', 'httpd' ] }
      - {role: ansible-role-elasticsearch-demo-event, tags: [ 'esput' ] }
      - {role: ansible-role-fluentd, tags: [ 'fluentd' ] }
+     - {role: ansible-role-rrsync, tags: [ 'rrsync' ] }
+     - {role: ansible-role-users, tags: [ 'rrsync', 'users' ] }

@@ -1,2 +1,2 @@
-roles/ansible-role-*
+roles/*
 secrets.yml

@@ -1,0 +1,117 @@
+---
+- src: https://github.com/valentinogagliardi/logstash-role.git
+  path: roles
+  name: ansible-role-logstash
+  version: 02c6b080bd40a2df40559870d0129d9956f7975d
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elasticsearch-curator
+  path: roles
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-chrony
+  path: roles
+  version: d492d1dd4f1e709d555e99465533bda64c85aaf4
+
+- src: https://github.com/martbhell/ansible-yum-cron
+  path: roles
+  name: ansible-role-yum-cron-2
+  #version: f58e773036aa9e2baade8c4a33b81be08a232414
+  version: 442e2b6b9d62aae84fb27571867184d7eb64c03e
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-users
+  path: roles
+  version: v1.5.3
+
+- src: https://github.com/thomo/ansible-logwatch
+  path: roles
+  name: ansible-role-logwatch
+  version: 42083c425f8c1d6cea93478e8cdf26b5aa126982
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-nrpe
+  path: roles
+  version: v1.0.0
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-nrpe-plugins
+  path: roles
+  version: v1.0.0
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-ferm-firewall
+  path: roles
+  name: ansible-role-ferm-firewall
+  version: v1.0.1
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-aliases
+  path: roles
+  name: ansible-role-aliases
+  version: v1.0.1
+
+- src: https://github.com/willshersystems/ansible-sshd
+  path: roles
+  name: ansible-role-sshd
+  version: bb5b94e1bed07242f18d0ee6650407cfda1faeb4
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-system-limits
+  path: roles
+  name: ansible-role-system-limits
+  version: 935482248bdd814a4b2175dd1addef19b8a4ca93
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-yum
+  path: roles
+  version: v1.2.1
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-flowdock
+  path: roles
+  version: v1.1.1
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-selinux
+  path: roles
+  version: v1.0.0
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-collectd
+  path: roles
+  version: v1.3.0
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-postfix
+  path: roles
+  version: v1.0.0
+
+- src: https://github.com/picotrading/ansible-resolv_conf
+  path: roles
+  name: ansible-role-resolv_conf
+  version: 7b8c0c26cf007aa05beb4c6ccafadbdd0e714dad
+
+# For ELK
+
+# elasticsearch role configures elasticsearch
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elasticsearch
+  path: roles
+  version: v1.0.0
+
+# sets up https, proxies
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elk-httpd
+  path: roles
+  version: v1.0.0
+
+# installs elastic repos and then installs software from there - logstash and elasticsearch
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elk
+  path: roles
+  version: v1.0.0
+
+# installs repo and installs kibana4
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-kibana4
+  path: roles
+  version: v1.1.0
+
+- src: https://github.com/jtyr/ansible-config_encoder_filters
+  path: roles
+  name: config_encoder_filters
+  version: 1bc94daf914ec17c6d7457dda20bd08600b1eef4
+          
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-redis
+  path: roles
+  name: ansible-role-redis
+  version: 61c5e5d03100a47a70c77926e9dafb1a6f613943
+
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-systemd-journal
+  path: roles
+  version: v1.0.1
+  name: ansible-role-systemd-journal

@@ -1,0 +1,53 @@
+---
+# configures the logservers
+# a server that:
+# * receive logs over:
+#   * redis (logstash/parser running on a remote host that sends already parsed json)
+#   * syslog (software that can write directly to a remote syslog, switches, scripts)
+# * parse logs, add tags and writes to elasticsearch
+# * runs elasticsearch
+# * runs kibana
+
+- name: First add users to the logservers node as root
+  hosts: ELK
+  remote_user: root
+  roles: 
+  - { role: ansible-role-users, tags: [ 'users', 'admin-users', 'user' ] }
+
+- name:  Configure OS on logservers
+  hosts: ELK
+  become: yes
+  roles:
+  - { role: network_interface, tags: [ 'network' ],
+    when: external_interface is defined and
+          external_interface in ansible_interfaces }
+  - { role: ansible-role-yum, tags: [ 'yum', 'repos' ] }
+  - { role: ansible-role-ferm-firewall, tags: [ 'firewall', 'ferm' ] }
+  - { role: ansible-role-chrony, tags: [ 'ntp', 'chrony' ] }
+  - { role: ansible-role-yum-cron-2, tags: [ 'yumcron' ] }
+  - { role: ansible-role-aliases, tags: [ 'aliases', 'email' ] }
+  - { role: ansible-role-sshd, tags: [ 'sshd', 'ssh' ] }
+  - { role: ansible-role-postfix, tags: [ 'postfix', 'mail' ] }
+  - { role: ansible-role-selinux, tags: [ 'selinux' ] }
+  - { role: ansible-role-resolv_conf, tags: [ 'dns', 'resolv_conf' ] }
+  - { role: ansible-role-logwatch, tags: [ 'logwatch' ] }
+  - { role: ansible-role-system-limits, tags: [ 'system-limits', 'sysctl', 'limits' ] }
+  - { role: ansible-role-systemd-journal, tags: [ 'systemd', 'journal', 'journald' ] }
+
+#########
+# Ordering here is important. Elasticsearch must be up before kibana4 service is started.
+
+- name: httpd, kibana + logstash
+  hosts: ELK
+  become: yes
+  roles:
+    - { role: ansible-role-elk, tags: [ 'elk', 'elk-init'] }
+    - { role: ansible-role-collectd, tags: [ 'collectd', 'monitoring' ] }
+    - { role: ansible-role-elasticsearch, tags: [ 'elasticsearch' ] }
+    - { role: ansible-role-elasticsearch-curator, tags: [ 'elasticsearch', 'curator' ] }
+    - { role: ansible-role-redis, tags: [ 'redis' ] }
+    - { role: ansible-role-logstash, tags: [ 'logstash' ] }
+    - { role: ansible-role-kibana4, tags: [ 'kibana', 'kibana4' ] }
+    - { role: ansible-role-elk-httpd, tags: [ 'kibana', 'httpd' ] }
+    - { role: ansible-role-flowdock, tags: [ 'flowdock' ] }
+# https cert

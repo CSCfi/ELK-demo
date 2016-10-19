@@ -1,0 +1,240 @@
+---
+# group_vars for logservers
+#
+prod_config_path: "config"
+logstash_prod_config: "{{ prod_config_path }}/logstash.conf"
+es_template_demo_path: "{{ prod_config_path }}/es-template-demo.json"
+redis_prod_config: "{{ prod_config_path }}/redis.conf"
+
+# set these to empty to disable the tasks in ansible-role-elk
+programs_to_install: []
+programs_on_boot: []
+cscgroups: []
+esuser: []
+
+add_es_repofile: "yes"
+add_es_repogpgkey: "yes"
+# we manage the system limits with the system-limits role
+add_es_nofiles: "no"
+
+limits_domains:
+  - domain: 'elasticsearch'
+    type: 'soft'
+    item: memlock
+    value: unlimited
+  - domain: 'elasticsearch'
+    type: 'hard'
+    item: memlock
+    value: unlimited
+
+elasticsearch_install_version: "2.x"
+logstash_version: "2.4"
+
+kibana4_ldap: False
+kibana4_index: "demo-kibana4-int"
+kibana_branch: "4.6"
+
+es_template_name: "template-demo"
+
+# From ansible-role-elk-httpd:
+elasticsearch_index_base: "demo"
+
+elk_httpd_es_put_del_post_password: "changeme"
+
+#Redis
+redis_security_requirepass: "changeme"
+redis_general_bind: "0.0.0.0"
+
+#overwrite the default redis_security_2_8
+redis_security_2_8: &redis_security_2_8
+  << : *redis_security_2_8
+  requirepass: "{{ redis_security_requirepass }}"
+
+# Ferm - firewall - replaces the default from all/all
+ferm_rules:
+ 05_ssh:
+ - chain: INPUT
+   domains: [ip, ip6]
+   rules:
+     - {rule: "policy DROP;",  comment: "global policy"}
+     - {rule: "mod state state INVALID DROP;", comment: "connection tracking: drop"}
+     - {rule: "mod state state (ESTABLISHED RELATED) ACCEPT;", comment: "connection tracking"}
+     - {rule: "proto udp dport (33434:33534) saddr ( 10.0.0.0/8 ) mod state state (NEW) mod comment comment 'traceroute_udp' ACCEPT;", comment: "traceroute UDP"}
+     - {rule: "interface lo ACCEPT;", comment: "allow local packet"}
+     - {rule: "proto icmp ACCEPT;", comment: "respond to ping"}
+     - {rule: "proto tcp dport (22) saddr ( {{ trusted_public_networks }} {{ trusted_public_ipv6_networks }} ) mod comment comment 'SSH' ACCEPT;", comment: "SSH"}
+     - {rule: "proto tcp dport (80) saddr ( {{ trusted_public_networks }} {{ trusted_public_ipv6_networks }} ) mod comment comment 'HTTP' ACCEPT;", comment: "HTTP"}
+     - {rule: "proto tcp dport (443) saddr ( {{ trusted_public_networks }} {{ trusted_public_ipv6_networks }} ) mod comment comment 'HTTPS' ACCEPT;", comment: "HTTPS"}
+     - {rule: "proto (udp tcp) dport (1515) saddr ( {{ ext_ipv6_net }} 10.0.0.0/8 ) mod comment comment 'logstash_rsyslog' ACCEPT;", comment: "logstash rsyslog syslog input"}
+     - {rule: "proto tcp dport (5666) saddr ( {{ monitoring_servers }} ) mod comment comment 'nagios' ACCEPT;", comment: "nagios"}
+     - {rule: "proto tcp dport (6379) saddr ( 10.0.0.0/8 ) mod comment comment 'redis' ACCEPT;", comment: "redis"}
+ - chain: OUTPUT
+   domains:
+     - ip
+     - ip6
+   rules:
+     - rule: "policy ACCEPT;"
+       comment: global policy
+ - chain: FORWARD
+   domains: [ip, ip6]
+   rules:
+     - rule: "policy DROP;"
+       comment: global policy
+     - rule: "mod state state INVALID DROP;"
+       comment: "connection tracking: drop"
+     - rule: "mod state state (ESTABLISHED RELATED) ACCEPT;"
+       comment: "connection tracking"
+
+# SSHD
+sshd:
+ AllowGroups: "root admin" 
+
+# Install these package
+unconfigured_packages:
+ - "vim-enhanced"
+ - "yum-plugin-priorities"
+ - "yum-plugin-changelog"
+ - "wget"
+ - "bash-completion"
+ - "nc"
+ - "httpd"
+ - "pciutils"
+ - "python-httplib2"
+ - "libselinux-python"
+ - "java-1.8.0-openjdk"
+ - "pdsh"
+ - "patch"
+ - "dstat"
+ - "lsof"
+ - "traceroute"
+ - "tcpdump"
+ - "screen"
+ - "mlocate"
+
+external_interface: "eth0"
+internal_interface: "eth1"
+
+network_ether_interfaces:
+  - device: "{{external_interface}}"
+    bootproto: "static"
+    onboot: "yes"
+    netmask: "{{ext_net_mask}}"
+    gateway: "{{ext_gateway}}"
+    address: "{{ext_ip_addr}}"
+    ipv6_address: "{{ext_ipv6_addr}}"
+    ipv6_gateway: "{{ext_ipv6_gateway}}"
+    defroute: "yes"
+    nm_controlled: "no"
+    type: "Ethernet"
+
+  - device: "{{internal_interface}}"
+    bootproto: "static"
+    onboot: "yes"
+    nm_controlled: "no"
+    type: "Ethernet"
+    netmask: "{{int_net_mask}}"
+    address: "{{int_ip_addr}}"
+
+# DNS
+resolv_conf_nameserver:
+ - 8.8.8.8
+
+admin_list_of_groups: 
+ - { name: logstash, gid: 991 }
+ - { name: elasticsearch, gid: 900 }
+
+moreusers:
+ - { name: logstash, state: 'present', uid: 618, groups: "logstash", shell: "{{adminshell}}" }
+ - { name: elasticsearch, state: 'present', uid: 900, groups: "elasticsearch", shell: "{{adminshell}}" }
+
+#ELK
+logstash_inputs: |
+  redis {  host => "10.11.3.35"
+           type => "redis-input"
+           data_type => "list"
+           key => "logstash"
+           password => "changeme"
+         }
+
+  tcp {
+          port => 1515
+          tags => ["syslog"]
+          type => "syslog"
+  }
+  udp {
+          port => 1515
+          tags => ["syslog"]
+          type => "syslog"
+  }
+
+
+
+logstash_filters: |
+  if [type] == "syslog" {
+    #### Base catcher of syslog messages - this should catch all - "TIMESTAMP HOSTNAME" is the largest common we can make it.
+    grok {
+      match => [ "message", "%{TIMESTAMP_ISO8601:iso8601_timestamp} %{HOSTNAME:host} %{GREEDYDATA:message}" ]
+      match => [ "message", "%{SYSLOGTIMESTAMP:syslog_timestamp} %{HOSTNAME:host} %{GREEDYDATA:message}" ]
+      add_tag => [ "syslog_0" ]
+      overwrite => [ "message", "host" ]
+      tag_on_failure => [ "_parsesyslog_failure_00" ]
+    }
+
+  } # end of if type syslog input
+
+  if [type] == "syslog" {
+    ### This should produce program and pid fields
+    grok {
+      # sshd[26277]: pam_unix(sshd:session): session closed for user usernamehere
+      match => [ "message", "%{SYSLOGPROG}: %{GREEDYDATA:message}" ]
+      add_tag => [ "syslog_1" ]
+      overwrite => [ "message" ]
+      tag_on_failure => [ "_parse_syslog_failure_10" ]
+    }
+  } # end of if type syslog
+
+   # some datematching from fields in the initial grok
+   if [syslog_timestamp] {
+     # iso8601: syslog
+     date {
+       match => [ "syslog_timestamp", "ISO8601", "MMM dd HH:mm:ss" ]
+       add_tag => [ "timestamp_matched" ]
+       target => "@timestamp2"
+       remove_field => [ "syslog_timestamp" ]
+       tag_on_failure => [ "_date_parse_failure_00" ]
+     }
+   }
+   if [iso8601_timestamp] {
+     date {
+       match => [ "iso8601_timestamp", "ISO8601", "MM.dd HH:mm:ss", "MMM dd HH:mm:ss" ]
+       add_tag => [ "timestamp_matched" ]
+       target => "@timestamp2"
+       remove_field => [ "iso8601_timestamp" ]
+       tag_on_failure => [ "_date_parse_failure_10" ]
+     }
+   }
+
+
+
+
+logstash_outputs: |
+    elasticsearch { hosts => "localhost:9199"
+                    index => "demo-%{+YYYY.MM.dd}"
+# templates commented out. Add these yourself
+# Use /opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-elasticsearch-2.7.1-java/lib/logstash/outputs/elasticsearch/elasticsearch-template.json as a template of the template
+#                    manage_template => true
+#                    template => "/etc/logstash/templates/elasticsearch-template.json"
+#                    template_overwrite => true
+                    
+         }
+  #  stdout { 
+  #  }
+
+
+## Collectd
+collectd_plugins_default: "{{
+  collectd_plugins_cpu +
+  collectd_plugins_interface +
+  collectd_plugins_load +
+  collectd_plugins_memory
+}}"

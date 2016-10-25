@@ -9,6 +9,11 @@
   name: ansible-role-network_interface
   version: 5a15451f835f8541b2e094daa088841712f94551
 
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-letsencrypt
+  path: roles
+  name: ansible-role-letsencrypt
+  version: ce890261ebd14343b024edd62ad73f3a4ec8efa5
+
 - src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elasticsearch-curator
   path: roles
 

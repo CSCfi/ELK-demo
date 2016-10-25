@@ -4,6 +4,11 @@
   name: ansible-role-logstash
   version: 02c6b080bd40a2df40559870d0129d9956f7975d
 
+- src: https://github.com/CSC-IT-Center-for-Science/network_interface
+  path: roles
+  name: ansible-role-network_interface
+  version: 5a15451f835f8541b2e094daa088841712f94551
+
 - src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elasticsearch-curator
   path: roles
 

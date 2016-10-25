@@ -11,6 +11,7 @@
 - name: First add users to the logservers node
   hosts: ELK
   remote_user: cloud-user
+  become: False
   gather_facts: False
   roles: 
   - { role: ansible-role-users, tags: [ 'users', 'admin-users', 'user' ] }
@@ -32,6 +33,7 @@
   - { role: ansible-role-logwatch, tags: [ 'logwatch' ] }
   - { role: ansible-role-system-limits, tags: [ 'system-limits', 'sysctl', 'limits' ] }
   - { role: ansible-role-systemd-journal, tags: [ 'systemd', 'journal', 'journald' ] }
+#  - { role: ansible-role-letsencrypt, tags: [ 'letsencrypt' ] }
   - { role: ansible-role-elk, tags: [ 'elk', 'elk-init'] }
   - { role: ansible-role-elasticsearch, tags: [ 'elasticsearch' ] }
   - { role: ansible-role-elasticsearch-curator, tags: [ 'elasticsearch', 'curator' ] }

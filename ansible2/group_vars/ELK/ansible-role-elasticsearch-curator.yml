@@ -1,30 +1,63 @@
 ---
+
 elasticsearch_curator_cron_jobs:
-  - {
-    name: "Delete old elasticsearch indices.",
-    job: "/bin/curator --logfile /var/log/logstash/delete-indices.log --port 9199 delete indices --older-than 90 --time-unit days --timestring '\\%Y.\\%m.\\%d' --prefix demo --exclude '.*kibana.*' 2>&1 >/dev/null",
-    minute: 0,
-    hour: 1,
-    user: root,
-    cron_file: "curator"
-  }
-  - {
-    name: "Unalias - must run before closing indices",
-    job: "/bin/curator --logfile /var/log/logstash/unalias-indices.log --port 9199 alias --name demo --remove indices --older-than 31 --time-unit days --timestring '\\%Y.\\%m.\\%d' --prefix demo 2>&1 >/dev/null",
-    minute: 10,
-    hour: 1
-  }
-  - {
-    name: "Close old elasticsearch indices.",
-    job: "/bin/curator --logfile /var/log/logstash/close-indices.log --port 9199 close indices --older-than 32 --time-unit days --timestring '\\%Y.\\%m.\\%d' --prefix demo --exclude '.*kibana.*' 2>&1 >/dev/null",
-    minute: 30,
-    hour: 1,
-    user: root,
-    cron_file: "curator"
-  }
-  - {
-    name: "Optimize indices",
-    job: "/bin/curator --logfile /var/log/logstash/optimize-indices.log --port 9199 optimize indices --older-than 1 --time-unit days --timestring '\\%Y.\\%m.\\%d' --prefix demo 2>&1 >/dev/null",
-    minute: 30,
-    hour: 3
-  }
+- {
+  name: "elasticsearch-curator",
+  job: "/bin/curator --config /etc/curator/curator.yml /etc/curator/action.yml",
+  minute: 0,
+  hour: 1,
+  user: root,
+  cron_file: "curator"
+}
+
+# elasticsearch-curator version 4 action file
+elasticsearch_curator_actions: |
+ actions:
+  2:
+    action: close
+    description: >-
+      Close indices older than 33 days (based on index name), for demo-
+      prefixed indices.
+    options:
+      delete_aliases: True
+      timeout_override:
+      continue_if_exception: False
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: demo-
+      exclude:
+    - filtertype: kibana
+      exclude: True
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 33
+      exclude:
+  3:
+    action: delete_indices
+    description: >-
+      Delete indices older than 90 days (based on index name), for demo-
+      prefixed indices.
+    options:
+      timeout_override:
+      continue_if_exception: False
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: demo-
+      exclude:
+    - filtertype: kibana
+      exclude: True
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 90
+      exclude:
+ 

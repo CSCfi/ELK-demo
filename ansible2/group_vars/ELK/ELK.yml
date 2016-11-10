@@ -27,12 +27,13 @@ limits_domains:
     item: memlock
     value: unlimited
 
-elasticsearch_install_version: "2.x"
+elasticsearch_install_version: "5.x"
 logstash_version: "2.4"
 
 kibana4_ldap: False
 kibana4_index: "demo-kibana4-int"
-kibana_branch: "4.6"
+kibana5_index: {{ kibana4_index }}
+kibana_branch: "5.x"
 
 es_template_name: "template-demo"
 

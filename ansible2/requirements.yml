@@ -94,22 +94,18 @@
 # elasticsearch role configures elasticsearch
 - src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elasticsearch
   path: roles
-  version: v1.0.0
 
 # sets up https, proxies
 - src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elk-httpd
   path: roles
-  version: v1.0.0
 
 # installs elastic repos and then installs software from there - logstash and elasticsearch
 - src: https://github.com/CSC-IT-Center-for-Science/ansible-role-elk
   path: roles
-  version: v1.0.0
 
-# installs repo and installs kibana4
-- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-kibana4
+# installs repo and installs kibana
+- src: https://github.com/CSC-IT-Center-for-Science/ansible-role-kibana
   path: roles
-  version: v1.1.0
 
 - src: https://github.com/jtyr/ansible-config_encoder_filters
   path: roles
